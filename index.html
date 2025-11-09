@@ -98,6 +98,7 @@ const tracks = [
   }
 ];
 const $ = s => document.querySelector(s);
+const basePath = window.location.pathname.split('/').slice(0, -1).join('/') || '';
 const playlistEl = $("#playlist"), art=$("#art"), title=$("#title"), subtitle=$("#subtitle"), audio=$("#audio"), source=$("#src"), openVis=$("#openVis");
 let idx=0;
 function renderList(){
@@ -105,7 +106,7 @@ function renderList(){
   tracks.forEach((t,i)=>{
     const row=document.createElement('div'); row.className='track'+(i===idx?' active':''); row.onclick=()=>load(i);
     const img=document.createElement('img');
-    img.src=`art/${t.key}_art.png`;
+    img.src=`${basePath}/art/${t.key}_art.png`;
     img.alt=t.title;
     img.onerror=function(){this.src='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="72" height="72"><rect fill="%23162235" width="72" height="72"/><text x="36" y="36" text-anchor="middle" dy=".3em" fill="%2396b4c9" font-size="10">No Art</text></svg>';};
     const meta=document.createElement('div'); meta.className='meta';
@@ -118,12 +119,12 @@ function renderList(){
 function load(i){
   idx=i; const t=tracks[idx];
   [...document.querySelectorAll('.track')].forEach((el,j)=>el.classList.toggle('active', j===idx));
-  art.src=`art/${t.key}_art.png`;
+  art.src=`${basePath}/art/${t.key}_art.png`;
   art.alt=t.title;
   art.onerror=function(){this.src='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400"><rect fill="%23162235" width="400" height="400"/><text x="200" y="200" text-anchor="middle" dy=".3em" fill="%2396b4c9" font-size="20">No Art</text></svg>';};
   title.textContent=t.title; subtitle.textContent=t.subtitle;
-  openVis.href=`visualizers/${t.key}_visualizer.html`;
-  source.src=`audio/${t.key}.mp3`; audio.load(); audio.play().catch(()=>{});
+  openVis.href=`${basePath}/visualizers/${t.key}_visualizer.html`;
+  source.src=`${basePath}/audio/${t.key}.mp3`; audio.load(); audio.play().catch(()=>{});
 }
 $("#prev").onclick=()=>load((idx-1+tracks.length)%tracks.length);
 $("#next").onclick=()=>load((idx+1)%tracks.length);
